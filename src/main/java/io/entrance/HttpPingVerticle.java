@@ -1,0 +1,95 @@
+
+package io.entrance;
+
+import io.entrance.service.eventbus.ServerHook;
+import io.entrance.service.graph.GraphService;
+
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.EventBus;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.http.HttpServer;
+import org.vertx.java.core.http.HttpServerRequest;
+import org.vertx.java.core.http.RouteMatcher;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.sockjs.SockJSServer;
+import org.vertx.java.platform.Verticle;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
+public class HttpPingVerticle extends Verticle {
+
+    public void start() {
+
+        HttpServer server = vertx.createHttpServer();
+
+        RouteMatcher rm = new RouteMatcher();
+
+        rm.get("/all", new Handler<HttpServerRequest>() {
+            public void handle(HttpServerRequest req) {
+                req.response().end(new GraphService().allVerticesJson());
+            }
+        });
+
+        // Catch all - serve the index page
+        rm.get("/create", new Handler<HttpServerRequest>() {
+            public void handle(HttpServerRequest req) {
+                Map<String, String> props = new HashMap<String, String>();
+                props.put("Hallo", "Welt");
+                props.put("wie", "geht");
+                props.put("es", "dir");
+                req.response().end("Hello entrance.io " + new GraphService().createVertexJson(props));
+            }
+        });
+
+        server = server.requestHandler(rm);
+
+        // sock server
+        JsonArray permitted = new JsonArray();
+        permitted.add(new JsonObject()); // Let everything through
+
+        ServerHook hook = new ServerHook(container.logger());
+
+        SockJSServer sockJSServer = vertx.createSockJSServer(server);
+        // sockJSServer.setHook(hook);
+        sockJSServer.bridge(new JsonObject().putString("prefix", "/eventbus"), permitted, permitted);
+
+        EventBus eb = vertx.eventBus();
+
+        vertx.setPeriodic(5000, new Handler<Long>() {
+            @Override
+            public void handle(Long timerID) {
+                vertx.eventBus().publish("news-feed", "more news!");
+            }
+        });
+
+        // Register Handler 1
+        eb.registerHandler("vertx.mongopersistor", new Handler<Message<JsonObject>>() {
+            @Override
+            public void handle(Message<JsonObject> msg) {
+                vertx.eventBus().publish("news-feed", "so das kommt jetzt aus dem mongopersistor.");
+                container.logger().info("Handler 1 received: " + msg.toString());
+                msg.reply(new JsonObject().putString("status", "ok").putArray("results", new JsonArray(new GraphService().allVerticesJson())));
+            }
+        });
+        
+        // Register create vertex handler
+        eb.registerHandler("io.entrance.create_vertex", new Handler<Message<JsonObject>>() {
+            @Override
+            public void handle(Message<JsonObject> msg) {
+                Map<String, String> properties = new HashMap<String, String>();
+                properties.put("Hallo", "Yeah! Erzeugt.");
+                for (Entry<String, Object> entry : msg.body().toMap().entrySet()) {
+                    properties.put(entry.getKey(), entry.getValue().toString());
+                }
+                msg.reply(new JsonObject().putString("status", "ok").putObject("result", new JsonObject(new GraphService().createVertexJson(properties))));
+            }
+        });
+
+        server.listen(8080);
+        container.logger().info("Webserver started, listening on port: 8080 !!");
+
+    }
+}
