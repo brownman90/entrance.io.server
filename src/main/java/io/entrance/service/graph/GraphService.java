@@ -28,6 +28,8 @@ public class GraphService {
         for (Entry<String, String> entry : properties.entrySet()) {
             vertex.setProperty(entry.getKey(), entry.getValue());
         }
+        
+        graph.commit();
 
         return new V(vertex);
     }
