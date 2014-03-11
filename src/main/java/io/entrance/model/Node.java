@@ -32,36 +32,50 @@ public class Node {
      * Adds an existing vertex to this node and defines the relationship between
      * the two.
      * 
-     * @param relationship - properties describing the relationship between both
+     * @param relProps - properties describing the relationship between both
      *            vertices. Must contain the label.
      * @param inVertex - the vertex that is added to this node.
      * @return the edge that has been created for the relation.
      */
-    public Edge add(Map<String, Object> relationship, Vertex inVertex) throws Exception {
-        validateRelationshipProperties(relationship);
+    public Relationship add(Map<String, Object> relProps, Vertex inVertex) throws Exception {
+        validateRelationshipProperties(relProps);
 
-        Edge edge = vertex.addEdge(relationship.remove("label").toString(), inVertex);
-        for (Entry<String, Object> entry : relationship.entrySet()) {
-            edge.setProperty(entry.getKey(), entry.getValue());
-        }
-
-        return edge;
+        Relationship relationship = new Relationship(this.vertex, inVertex, relProps);
+        return relationship;
+    }
+    
+    /**
+     * Adds an existing node to this one and defines the relationship between the two.
+     * As @see {@link #add(Map, Vertex)} but accepting an inNode instead of an inVertex.
+     * 
+     * @param relProps
+     * @param inNode
+     * @return the relationship between this node and the ingoing one.
+     * @throws Exception
+     */
+    public Relationship add(Map<String, Object> relProps, Node inNode) throws Exception {
+        Relationship relationship = add(relProps, inNode.getVertex());
+        return relationship;
     }
 
-    private void validateRelationshipProperties(Map<String, Object> relationship) {
+    /**
+     * Validates the relationship. Especially detects if a label is provided and throws an error otherwise.
+     * 
+     * @param relationship
+     */
+    private void validateRelationshipProperties(Map<String, Object> relationship) throws Exception {
         if (!relationship.keySet().contains("label")) {
             throw new IllegalStateException("Label of the relationship is undefined");
         }
     }
 
-    public Pair<Edge, Node> add(Map<String, Object> relationship, Map<String, Object> properties) throws Exception {
-        validateRelationshipProperties(relationship);
+    public Pair<Relationship, Node> add(Map<String, Object> relProps, Map<String, Object> nodeProps) throws Exception {
+        validateRelationshipProperties(relProps);
         
-        Node inNode = Node.create(properties);
-        Edge edge = this.add(relationship, inNode.vertex);
+        Node inNode = Node.create(nodeProps);
+        Relationship relationship = this.add(relProps, inNode);
         
-        // TODO: return the relationship as well
-        return Pair.with(edge, inNode);
+        return Pair.with(relationship, inNode);
     }
 
     /**
@@ -85,4 +99,10 @@ public class Node {
 
         return new Node(vertex);
     }
+
+    public Vertex getVertex() {
+        return vertex;
+    }
+    
+    
 }
