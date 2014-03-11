@@ -1,18 +1,39 @@
 
 package io.entrance.model;
 
-import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
 
-import org.javatuples.Pair;
-
 import io.entrance.service.graph.db.GraphDB;
+
+import org.javatuples.Pair;
 
 import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
 
 public class Node {
+
+    /**
+     * Creates a vertex and returns an instance of this class as a wrapper
+     * around the vertex.
+     * 
+     * @param properties
+     * @return
+     * @throws Exception
+     */
+    public static Node create(Map<String, Object> properties) throws Exception {
+        Vertex vertex = GraphDB.INSTANCE.getGraph().addVertex(null);
+        for (Entry<String, Object> entry : properties.entrySet()) {
+            vertex.setProperty(entry.getKey(), entry.getValue());
+        }
+
+        // set timestamps
+        long epoch = new Date().getTime();
+        vertex.setProperty("created_at", epoch);
+        vertex.setProperty("updated_at", epoch);
+
+        return new Node(vertex);
+    }
 
     private Vertex vertex;
 
@@ -26,6 +47,42 @@ public class Node {
 
     public Node(Vertex vertex) {
         this.vertex = vertex;
+    }
+
+    /**
+     * Validates the relationship. Especially detects if a label is provided and
+     * throws an error otherwise.
+     * 
+     * @param relationship
+     */
+    private void validateRelationshipProperties(Map<String, Object> relationship) throws Exception {
+        if (!relationship.keySet().contains("label")) {
+            throw new IllegalStateException("Label of the relationship is undefined");
+        }
+    }
+
+    public Pair<Relationship, Node> add(Map<String, Object> relProps, Map<String, Object> nodeProps) throws Exception {
+        validateRelationshipProperties(relProps);
+
+        Node inNode = Node.create(nodeProps);
+        Relationship relationship = this.add(relProps, inNode);
+
+        return Pair.with(relationship, inNode);
+    }
+
+    /**
+     * Adds an existing node to this one and defines the relationship between
+     * the two. As @see {@link #add(Map, Vertex)} but accepting an inNode
+     * instead of an inVertex.
+     * 
+     * @param relProps
+     * @param inNode
+     * @return the relationship between this node and the ingoing one.
+     * @throws Exception
+     */
+    public Relationship add(Map<String, Object> relProps, Node inNode) throws Exception {
+        Relationship relationship = add(relProps, inNode.getVertex());
+        return relationship;
     }
 
     /**
@@ -43,66 +100,9 @@ public class Node {
         Relationship relationship = new Relationship(this.vertex, inVertex, relProps);
         return relationship;
     }
-    
-    /**
-     * Adds an existing node to this one and defines the relationship between the two.
-     * As @see {@link #add(Map, Vertex)} but accepting an inNode instead of an inVertex.
-     * 
-     * @param relProps
-     * @param inNode
-     * @return the relationship between this node and the ingoing one.
-     * @throws Exception
-     */
-    public Relationship add(Map<String, Object> relProps, Node inNode) throws Exception {
-        Relationship relationship = add(relProps, inNode.getVertex());
-        return relationship;
-    }
-
-    /**
-     * Validates the relationship. Especially detects if a label is provided and throws an error otherwise.
-     * 
-     * @param relationship
-     */
-    private void validateRelationshipProperties(Map<String, Object> relationship) throws Exception {
-        if (!relationship.keySet().contains("label")) {
-            throw new IllegalStateException("Label of the relationship is undefined");
-        }
-    }
-
-    public Pair<Relationship, Node> add(Map<String, Object> relProps, Map<String, Object> nodeProps) throws Exception {
-        validateRelationshipProperties(relProps);
-        
-        Node inNode = Node.create(nodeProps);
-        Relationship relationship = this.add(relProps, inNode);
-        
-        return Pair.with(relationship, inNode);
-    }
-
-    /**
-     * Creates a vertex and returns an instance of this class as a wrapper
-     * around the vertex.
-     * 
-     * @param properties
-     * @return  
-     * @throws Exception
-     */
-    public static Node create(Map<String, Object> properties) throws Exception {
-        Vertex vertex = GraphDB.INSTANCE.getGraph().addVertex(null);
-        for (Entry<String, Object> entry : properties.entrySet()) {
-            vertex.setProperty(entry.getKey(), entry.getValue());
-        }
-
-        // set timestamps
-        long epoch = new Date().getTime();
-        vertex.setProperty("created_at", epoch);
-        vertex.setProperty("updated_at", epoch);
-
-        return new Node(vertex);
-    }
 
     public Vertex getVertex() {
         return vertex;
     }
-    
-    
+
 }

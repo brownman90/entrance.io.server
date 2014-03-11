@@ -37,9 +37,13 @@ public class Relationship {
     }
 
     /**
-     * Constructs a relationship from TODO
+     * Constructs a relationship between the outVertex and the inVertex with the specified
+     * map of properties.
      * 
+     * @param outVertex
+     * @param inVertex
      * @param properties
+     * @throws Exception
      */
     public Relationship(Vertex outVertex, Vertex inVertex, Map<String, Object> properties) throws Exception {
        if (!properties.containsKey("label")) {
