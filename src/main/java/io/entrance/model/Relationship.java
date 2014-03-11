@@ -16,6 +16,8 @@ import java.util.Map.Entry;
  * @author jan.prill
  */
 public class Relationship {
+    
+    public static final String LABEL = "label";
 
     private Edge edge;
 
@@ -50,7 +52,7 @@ public class Relationship {
            throw new IllegalStateException("There's no label set in the relationship properties.");
        }
        
-       Edge edge = GraphDB.INSTANCE.getGraph().addEdge(null, outVertex, inVertex, properties.get("label").toString());
+       Edge edge = GraphDB.INSTANCE.getGraph().addEdge(null, outVertex, inVertex, properties.get(LABEL).toString());
        for (Entry<String, Object> entry : properties.entrySet()) {
            edge.setProperty(entry.getKey(), entry.getValue());
        }

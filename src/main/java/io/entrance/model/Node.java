@@ -53,10 +53,10 @@ public class Node {
      * Validates the relationship. Especially detects if a label is provided and
      * throws an error otherwise.
      * 
-     * @param relationship
+     * @param relProps
      */
-    private void validateRelationshipProperties(Map<String, Object> relationship) throws Exception {
-        if (!relationship.keySet().contains("label")) {
+    private void validateRelationshipProperties(Map<String, Object> relProps) throws Exception {
+        if (!relProps.keySet().contains(Relationship.LABEL)) {
             throw new IllegalStateException("Label of the relationship is undefined");
         }
     }
