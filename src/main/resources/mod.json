@@ -3,7 +3,8 @@
   // Java verticle
   // "main":"io.entrance.PingVerticle",
   // "main":"io.entrance.HttpPingVerticle",
-  "main":"io.entrance.verticles.BusVerticle",
+  // "main":"io.entrance.verticles.BusVerticle",
+  "main":"io.entrance.verticles.Main",
   // "main":"io.entrance.SockJSExample",
 
   // In this example we also provide various other versions of the main verticle, you can uncomment this and

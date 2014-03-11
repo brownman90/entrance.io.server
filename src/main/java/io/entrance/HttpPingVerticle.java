@@ -113,8 +113,8 @@ public class HttpPingVerticle extends Verticle {
         });
         
 
-        server.listen(8080);
-        container.logger().info("Webserver started, listening on port: 8080 !!");
+        server.listen(8888);
+        container.logger().info("Webserver started, listening on port: 8888 !!");
     }
     
     /**
