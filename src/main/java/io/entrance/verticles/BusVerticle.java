@@ -1,9 +1,8 @@
 
-package io.entrance;
+package io.entrance.verticles;
 
 import io.entrance.model.Node;
 import io.entrance.model.Relationship;
-import io.entrance.service.eventbus.ServerHook;
 import io.entrance.service.graph.CommentService;
 import io.entrance.service.graph.GraphService;
 
@@ -12,54 +11,34 @@ import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.EventBus;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.HttpServer;
-import org.vertx.java.core.http.HttpServerRequest;
-import org.vertx.java.core.http.RouteMatcher;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.sockjs.SockJSServer;
 import org.vertx.java.platform.Verticle;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class HttpPingVerticle extends Verticle {
+public class BusVerticle extends Verticle {
 
+    @Override
     public void start() {
-
         HttpServer server = vertx.createHttpServer();
+        JsonObject config = new JsonObject().putString("prefix", "/eventbus");
+        JsonArray permissions = setupPermissions(); 
+        vertx.createSockJSServer(server).bridge(config, permissions, permissions);
+        setupEventBus();
 
-        RouteMatcher rm = new RouteMatcher();
+        server.listen(8080);
+    }
 
-        rm.get("/all", new Handler<HttpServerRequest>() {
-            public void handle(HttpServerRequest req) {
-                req.response().end(new GraphService().allVerticesJson());
-            }
-        });
+    private JsonArray setupPermissions() {
+        JsonArray permissions = new JsonArray();
+        permissions.add(new JsonObject());
+        return permissions;
+    }
 
-        rm.get("/create", new Handler<HttpServerRequest>() {
-            public void handle(HttpServerRequest req) {
-                Map<String, String> props = new HashMap<String, String>();
-                props.put("Hallo", "Welt");
-                props.put("wie", "geht");
-                props.put("es", "dir");
-                req.response().end("Hello entrance.io " + new GraphService().createVertexJson(props));
-            }
-        });
-
-        server = server.requestHandler(rm);
-
-        // sock server
-        JsonArray permitted = new JsonArray();
-        // TODO: Security: Currently lets everything through.
-        permitted.add(new JsonObject()); 
-
-        ServerHook hook = new ServerHook(container.logger());
-
-        SockJSServer sockJSServer = vertx.createSockJSServer(server);
-        // sockJSServer.setHook(hook);
-        sockJSServer.bridge(new JsonObject().putString("prefix", "/eventbus"), permitted, permitted);
-
+    private void setupEventBus() {
         EventBus eb = vertx.eventBus();
 
         vertx.setPeriodic(5000, new Handler<Long>() {
@@ -78,7 +57,7 @@ public class HttpPingVerticle extends Verticle {
                 msg.reply(new JsonObject().putString("status", "ok").putArray("results", new JsonArray(new GraphService().allVerticesJson())));
             }
         });
-        
+
         // Register create vertex handler
         eb.registerHandler("io.entrance.create_vertex", new Handler<Message<JsonObject>>() {
             @Override
@@ -91,8 +70,9 @@ public class HttpPingVerticle extends Verticle {
                 msg.reply(new JsonObject().putString("status", "ok").putObject("result", new JsonObject(new GraphService().createVertexJson(properties))));
             }
         });
-        
-        // Register activity handler. An activity would be 'commenting' for example.
+
+        // Register activity handler. An activity would be 'commenting' for
+        // example.
         eb.registerHandler("io.entrance.activity", new Handler<Message<JsonObject>>() {
 
             @Override
@@ -109,14 +89,10 @@ public class HttpPingVerticle extends Verticle {
                     e.printStackTrace();
                 }
             }
-            
-        });
-        
 
-        server.listen(8080);
-        container.logger().info("Webserver started, listening on port: 8080 !!");
+        });
     }
-    
+
     /**
      * Extract all properties from a message transferred over the bus.
      * 
@@ -128,7 +104,8 @@ public class HttpPingVerticle extends Verticle {
         for (Entry<String, Object> entry : msg.body().toMap().entrySet()) {
             properties.put(entry.getKey(), entry.getValue().toString());
         }
-        
+
         return properties;
     }
+
 }

@@ -1,8 +1,9 @@
 {
 
   // Java verticle
-  "main":"io.entrance.PingVerticle",
-  "main":"io.entrance.HttpPingVerticle",
+  // "main":"io.entrance.PingVerticle",
+  // "main":"io.entrance.HttpPingVerticle",
+  "main":"io.entrance.verticles.BusVerticle",
   // "main":"io.entrance.SockJSExample",
 
   // In this example we also provide various other versions of the main verticle, you can uncomment this and
@@ -25,6 +26,8 @@
 
   // Python verticle
   //"main": "ping_verticle.py",
+  
+  "includes":"io.vertx~mod-rxvertx~1.0.0-beta2",
 
 
   // If your module is going to be registered in the Vert.x module registry you will also need the following

@@ -6,7 +6,7 @@ import com.tinkerpop.blueprints.Vertex;
 
 import org.vertx.java.core.json.JsonArray;
 
-import io.entrance.model.json.V;
+import io.entrance.model.json.JsonVertex;
 import io.entrance.service.graph.db.GraphDB;
 import io.entrance.service.json.gson.GSON;
 
@@ -23,7 +23,7 @@ public class GraphService {
         graph = GraphDB.INSTANCE.getGraph();
     }
 
-    public V createVertex(Map<String, String> properties) {
+    public JsonVertex createVertex(Map<String, String> properties) {
         Vertex vertex = graph.addVertex(null);
         for (Entry<String, String> entry : properties.entrySet()) {
             vertex.setProperty(entry.getKey(), entry.getValue());
@@ -31,26 +31,26 @@ public class GraphService {
         
         graph.commit();
 
-        return new V(vertex);
+        return new JsonVertex(vertex);
     }
 
     public String createVertexJson(Map<String, String> properties) {
-        V wrapper = createVertex(properties);
+        JsonVertex wrapper = createVertex(properties);
         return GSON.INSTANCE.gson().toJson(wrapper);
     }
     
-    public List<V> allVertices() {
-        List<V> vs = new ArrayList<V>();
+    public List<JsonVertex> allVertices() {
+        List<JsonVertex> jsonVertexs = new ArrayList<JsonVertex>();
         for (Vertex vertex : graph.getVertices()) {
-            vs.add(new V(vertex));
+            jsonVertexs.add(new JsonVertex(vertex));
         }
         
-        return vs;
+        return jsonVertexs;
     }
     
     public String allVerticesJson() {
-        List<V> vs = allVertices();
-        return GSON.INSTANCE.gson().toJson(vs);
+        List<JsonVertex> jsonVertexs = allVertices();
+        return GSON.INSTANCE.gson().toJson(jsonVertexs);
     }
 
 }

@@ -10,16 +10,16 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Wrapper for a @see {@link Vertex}. A 'V' is a vertex or,
+ * Wrapper for a @see {@link Vertex}. A 'JsonVertex' is a vertex or,
  * as other graph databases call them, a node. A vertex consists
- * of an id and a set of properties. The 'V' is mostly a data
+ * of an id and a set of properties. The 'JsonVertex' is mostly a data
  * transfer object for @see {@link Vertex} that only transports
  * the data necessary for the frontend in JSON format.
  * 
  * @author jan.prill
  *
  */
-public class V {
+public class JsonVertex {
 
     private transient Vertex vertex;
     private Map<String, Object> properties;
@@ -31,7 +31,7 @@ public class V {
      * Hidden default constructor.
      */
     @SuppressWarnings("unused")
-    private V() {
+    private JsonVertex() {
 
     }
 
@@ -40,7 +40,7 @@ public class V {
      * 
      * @param vertex
      */
-    public V(Vertex vertex) {
+    public JsonVertex(Vertex vertex) {
         this.vertex = vertex;
         this.id = vertex.getId();
         for (String key : vertex.getPropertyKeys()) {
