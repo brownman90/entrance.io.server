@@ -6,6 +6,7 @@ import com.tinkerpop.blueprints.Vertex;
 
 import io.entrance.service.graph.db.GraphDB;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -48,11 +49,21 @@ public class Relationship {
      * @throws Exception
      */
     public Relationship(Vertex outVertex, Vertex inVertex, Map<String, Object> properties) throws Exception {
-       if (!properties.containsKey("label")) {
+       if (!properties.containsKey(LABEL)) {
            throw new IllegalStateException("There's no label set in the relationship properties.");
        }
        
-       Edge edge = GraphDB.INSTANCE.getGraph().addEdge(null, outVertex, inVertex, properties.get(LABEL).toString());
+       // add timestamps if not yet available
+       long epoch = new Date().getTime();
+       if (!properties.containsKey(Node.CREATED)) {
+           properties.put(Node.CREATED, epoch);
+       } 
+       if (!properties.containsKey(Node.UPDATED)) {
+           properties.put(Node.UPDATED, epoch);
+       }
+       
+       String label = properties.remove(LABEL).toString();
+       Edge edge = GraphDB.INSTANCE.getGraph().addEdge(null, outVertex, inVertex, label);
        for (Entry<String, Object> entry : properties.entrySet()) {
            edge.setProperty(entry.getKey(), entry.getValue());
        }

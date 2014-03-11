@@ -12,6 +12,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 public class Node {
+    
+    public static final String CREATED = "created_at";
+    public static final String UPDATED = "updated_at";
 
     /**
      * Creates a vertex and returns an instance of this class as a wrapper
@@ -29,10 +32,16 @@ public class Node {
 
         // set timestamps
         long epoch = new Date().getTime();
-        vertex.setProperty("created_at", epoch);
-        vertex.setProperty("updated_at", epoch);
+        vertex.setProperty(CREATED, epoch);
+        vertex.setProperty(UPDATED, epoch);
 
         return new Node(vertex);
+    }
+    
+    public static Node find(Object id) throws Exception {
+        Vertex vertex = GraphDB.INSTANCE.getGraph().getVertex(id);
+        Node node = new Node(vertex);
+        return node;
     }
 
     private Vertex vertex;
@@ -65,7 +74,7 @@ public class Node {
         validateRelationshipProperties(relProps);
 
         Node inNode = Node.create(nodeProps);
-        Relationship relationship = this.add(relProps, inNode);
+        Relationship relationship = add(relProps, inNode);
 
         return Pair.with(relationship, inNode);
     }

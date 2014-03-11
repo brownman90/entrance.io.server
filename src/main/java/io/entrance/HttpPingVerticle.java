@@ -1,9 +1,13 @@
 
 package io.entrance;
 
+import io.entrance.model.Node;
+import io.entrance.model.Relationship;
 import io.entrance.service.eventbus.ServerHook;
+import io.entrance.service.graph.CommentService;
 import io.entrance.service.graph.GraphService;
 
+import org.javatuples.Triplet;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.EventBus;
 import org.vertx.java.core.eventbus.Message;
@@ -87,9 +91,44 @@ public class HttpPingVerticle extends Verticle {
                 msg.reply(new JsonObject().putString("status", "ok").putObject("result", new JsonObject(new GraphService().createVertexJson(properties))));
             }
         });
+        
+        // Register activity handler. An activity would be 'commenting' for example.
+        eb.registerHandler("io.entrance.activity", new Handler<Message<JsonObject>>() {
+
+            @Override
+            public void handle(Message<JsonObject> msg) {
+                Map<String, Object> relProps = new HashMap<String, Object>();
+                relProps.put("todo", "cope with rel-props");
+                Map<String, Object> properties = extractProperties(msg);
+                Object id = properties.remove("id");
+                try {
+                    // TODO: we need to return json right away
+                    Triplet<Node, Relationship, Node> thread = new CommentService(id).comment(relProps, properties);
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+            
+        });
+        
 
         server.listen(8080);
         container.logger().info("Webserver started, listening on port: 8080 !!");
-
+    }
+    
+    /**
+     * Extract all properties from a message transferred over the bus.
+     * 
+     * @param msg
+     * @return
+     */
+    private Map<String, Object> extractProperties(Message<JsonObject> msg) {
+        Map<String, Object> properties = new HashMap<String, Object>();
+        for (Entry<String, Object> entry : msg.body().toMap().entrySet()) {
+            properties.put(entry.getKey(), entry.getValue().toString());
+        }
+        
+        return properties;
     }
 }
