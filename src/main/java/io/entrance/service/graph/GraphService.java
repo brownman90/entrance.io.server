@@ -31,7 +31,7 @@ public class GraphService {
         
         graph.commit();
 
-        return new JsonVertex(vertex);
+        return new JsonVertex(vertex, 1, 1);
     }
 
     public String createVertexJson(Map<String, String> properties) {
@@ -42,7 +42,7 @@ public class GraphService {
     public List<JsonVertex> allVertices() {
         List<JsonVertex> jsonVertexs = new ArrayList<JsonVertex>();
         for (Vertex vertex : graph.getVertices()) {
-            jsonVertexs.add(new JsonVertex(vertex));
+            jsonVertexs.add(new JsonVertex(vertex, 1, 1));
         }
         
         return jsonVertexs;

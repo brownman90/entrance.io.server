@@ -4,7 +4,7 @@ package io.entrance;
 import io.entrance.model.Node;
 import io.entrance.model.Relationship;
 import io.entrance.service.eventbus.ServerHook;
-import io.entrance.service.graph.CommentService;
+import io.entrance.service.graph.RelationService;
 import io.entrance.service.graph.GraphService;
 
 import org.javatuples.Triplet;
@@ -103,7 +103,7 @@ public class HttpPingVerticle extends Verticle {
                 Object id = properties.remove("id");
                 try {
                     // TODO: we need to return json right away
-                    Triplet<Node, Relationship, Node> thread = new CommentService(id).comment(relProps, properties);
+                    Triplet<Node, Relationship, Node> thread = new RelationService(id).comment(relProps, properties);
                 } catch (Exception e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();

@@ -3,7 +3,8 @@ package io.entrance.verticles;
 
 import io.entrance.model.Node;
 import io.entrance.model.Relationship;
-import io.entrance.service.graph.CommentService;
+import io.entrance.model.json.JsonVertex;
+import io.entrance.service.graph.RelationService;
 import io.entrance.service.graph.GraphService;
 
 import org.javatuples.Triplet;
@@ -25,7 +26,7 @@ public class BusVerticle extends Verticle {
     public void start() {
         HttpServer server = vertx.createHttpServer();
         JsonObject config = new JsonObject().putString("prefix", "/eventbus");
-        JsonArray permissions = setupPermissions(); 
+        JsonArray permissions = setupPermissions();
         vertx.createSockJSServer(server).bridge(config, permissions, permissions);
         setupEventBus();
 
@@ -82,8 +83,8 @@ public class BusVerticle extends Verticle {
                 Map<String, Object> properties = extractProperties(msg);
                 Object id = properties.remove("id");
                 try {
-                    // TODO: we need to return json right away
-                    Triplet<Node, Relationship, Node> thread = new CommentService(id).comment(relProps, properties);
+                    Triplet<Node, Relationship, Node> thread = new RelationService(id).comment(relProps, properties);
+                    msg.reply(new JsonVertex(thread.getValue2(), 1, 1).toJson());
                 } catch (Exception e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();

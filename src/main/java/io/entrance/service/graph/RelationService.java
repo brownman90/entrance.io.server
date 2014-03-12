@@ -12,11 +12,13 @@ import java.util.Map;
 
 /**
  * Commenting is an important part of social media interaction. This service
- * provides the functionality to comment on every kind of node/vertex possible.
+ * provides the functionality to comment on every kind of node/vertex possible. 
+ * Other relating activities are able as well. Therefore this is 'RelationService' not
+ * 'CommentService'.
  * 
  * @author jan.prill
  */
-public class CommentService {
+public class RelationService {
 
     private static final String VERB_COMMENT = "comment";
 
@@ -26,7 +28,7 @@ public class CommentService {
      * Hidden default constructor.
      */
     @SuppressWarnings("unused")
-    private CommentService() {
+    private RelationService() {
 
     }
 
@@ -36,7 +38,7 @@ public class CommentService {
      * 
      * @param node
      */
-    public CommentService(Node node) {
+    public RelationService(Node node) {
         this.node = node;
     }
     
@@ -46,7 +48,7 @@ public class CommentService {
      * @param id
      * @throws Exception
      */
-    public CommentService(Object id) throws Exception {
+    public RelationService(Object id) throws Exception {
         this.node = Node.find(id);
     }
 
