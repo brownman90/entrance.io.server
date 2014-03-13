@@ -28,7 +28,7 @@
   // Python verticle
   //"main": "ping_verticle.py",
   
-  "includes":"io.vertx~mod-rxvertx~1.0.0-beta2",
+  "includes":"io.vertx~mod-rxvertx~1.0.0-beta2, io.entrance~mod-entrance-io-auth~1.0.0-SNAPSHOT",
 
 
   // If your module is going to be registered in the Vert.x module registry you will also need the following

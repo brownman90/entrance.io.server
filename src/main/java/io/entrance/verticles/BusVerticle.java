@@ -7,6 +7,7 @@ import io.entrance.model.json.JsonVertex;
 import io.entrance.service.graph.RelationService;
 import io.entrance.service.graph.GraphService;
 
+import org.javatuples.Pair;
 import org.javatuples.Triplet;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.EventBus;
@@ -83,8 +84,8 @@ public class BusVerticle extends Verticle {
                 Map<String, Object> properties = extractProperties(msg);
                 Object id = properties.remove("id");
                 try {
-                    Triplet<Node, Relationship, Node> thread = new RelationService(id).comment(relProps, properties);
-                    msg.reply(new JsonVertex(thread.getValue2(), 1, 1).toJson());
+                    Pair<Relationship, Node> thread = new RelationService(id).comment(relProps, properties);
+                    msg.reply(new JsonVertex(thread.getValue1(), 1, 1).toJson());
                 } catch (Exception e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();

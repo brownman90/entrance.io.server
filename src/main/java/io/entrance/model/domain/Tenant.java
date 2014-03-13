@@ -1,10 +1,10 @@
 
-package io.entrance.model;
+package io.entrance.model.domain;
 
 /**
  * A tenant is a customer of the entrance.io system. He therefore is able to use
  * the entrance.io application to manage his most important assets. The first
- * use case would be: the tenant uses entrance.io to manage his recruitment
+ * use case would be: the tenant uses entrance.io to manage his recruiting
  * processes.
  * 
  * @author jan.prill

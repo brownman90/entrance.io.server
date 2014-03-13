@@ -132,6 +132,14 @@
 		  <artifactId>mod-rxvertx</artifactId>
 		  <version>1.0.0-beta2</version>
 		</dependency>
+    <dependency>
+      <groupId>io.entrance</groupId>
+      <artifactId>mod-entrance-io-auth</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+
+
+
 
   </dependencies>
 

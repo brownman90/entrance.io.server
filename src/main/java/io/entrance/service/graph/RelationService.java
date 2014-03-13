@@ -3,6 +3,7 @@ package io.entrance.service.graph;
 
 import io.entrance.model.Node;
 import io.entrance.model.Relationship;
+import io.entrance.service.activity.Verbs;
 import io.entrance.service.graph.db.GraphDB;
 
 import org.javatuples.Pair;
@@ -19,8 +20,6 @@ import java.util.Map;
  * @author jan.prill
  */
 public class RelationService {
-
-    private static final String VERB_COMMENT = "comment";
 
     private Node node;
 
@@ -53,28 +52,54 @@ public class RelationService {
     }
 
     /**
+     * Comment on a specific node/vertex of information.
+     * 
      * Comment on an outgoing node by providing relationship-properties, as well
      * as comment properties. This is transactional and committed at the end of
      * the transaction.
      * 
-     * @param outNode - the node the comment happens upon.
      * @param relProps - the properties of the commenting relationship that
      *            should be established.
      * @param commentProps - the properties of the comment itself. Especially
      *            it's content and metadata.
-     * @return a triplet consisting of the outgoing node, the established
+     * @return a pair consisting of the established
      *         comment-relationship and the comment node itself.
      * @throws Exception
      */
-    public Triplet<Node, Relationship, Node> comment(Map<String, Object> relProps, Map<String, Object> commentProps) throws Exception {
+    public Pair<Relationship, Node> comment(Map<String, Object> relProps, Map<String, Object> commentProps) throws Exception {
+        return createRelation(Verbs.COMMENT.label(), relProps, commentProps);
+    }
+    
+    /**
+     * Like a specific node/vertex of information.
+     * 
+     * @param relProps
+     * @param likeProps
+     * @return
+     * @throws Exception
+     */
+    public Pair<Relationship, Node> like(Map<String, Object> relProps, Map<String, Object> likeProps) throws Exception {
+        return createRelation(Verbs.LIKE.label(), relProps, likeProps);
+    }
+
+    /**
+     * Helper method used by all relation activities.
+     * 
+     * @param activityVerb
+     * @param relProps
+     * @param targetNodeProps
+     * @return
+     * @throws Exception
+     */
+    private Pair<Relationship, Node> createRelation(String activityVerb, Map<String, Object> relProps, Map<String, Object> targetNodeProps) throws Exception {
         // make sure that the label is right
-        relProps.put(Relationship.LABEL, VERB_COMMENT);
+        relProps.put(Relationship.LABEL, activityVerb);
         // add the comment
-        Pair<Relationship, Node> relationshipAndComment = node.add(relProps, commentProps);
+        Pair<Relationship, Node> relationshipAndTargetNode = node.add(relProps, targetNodeProps);
         // commit
         GraphDB.INSTANCE.getGraph().commit();
 
-        return Triplet.with(node, relationshipAndComment.getValue0(), relationshipAndComment.getValue1());
+        return relationshipAndTargetNode;
     }
 
 }

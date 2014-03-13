@@ -7,6 +7,7 @@ import io.entrance.service.eventbus.ServerHook;
 import io.entrance.service.graph.RelationService;
 import io.entrance.service.graph.GraphService;
 
+import org.javatuples.Pair;
 import org.javatuples.Triplet;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.EventBus;
@@ -103,7 +104,7 @@ public class HttpPingVerticle extends Verticle {
                 Object id = properties.remove("id");
                 try {
                     // TODO: we need to return json right away
-                    Triplet<Node, Relationship, Node> thread = new RelationService(id).comment(relProps, properties);
+                    Pair<Relationship, Node> thread = new RelationService(id).comment(relProps, properties);
                 } catch (Exception e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
