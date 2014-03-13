@@ -1,11 +1,7 @@
 {
 
   // Java verticle
-  // "main":"io.entrance.PingVerticle",
-  // "main":"io.entrance.HttpPingVerticle",
-  // "main":"io.entrance.verticles.BusVerticle",
   "main":"io.entrance.verticles.Main",
-  // "main":"io.entrance.SockJSExample",
 
   // In this example we also provide various other versions of the main verticle, you can uncomment this and
   // play around:
@@ -35,11 +31,11 @@
   // mandatory fields
   "description":"Put description of your module here",
   "licenses": ["The Apache Software License Version 2.0"],
-  "author": "Joe Bloggs",
+  "author": "Jan Prill",
 
   // Optional fields
-  "developers": ["Other Dev 1", "Other Dev 2"],
-  "keywords": ["gerbils", "cars", "cheese", "chocolate", "underpants", "herring"],
+  "developers": ["Jan Prill"],
+  "keywords": ["asset management", "recruiting"],
   "homepage": "url to your project page",
 
   "auto-redeploy": true
