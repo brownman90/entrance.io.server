@@ -40,17 +40,17 @@ public class GraphService {
     }
     
     public List<JsonVertex> allVertices() {
-        List<JsonVertex> jsonVertexs = new ArrayList<JsonVertex>();
+        List<JsonVertex> jsonVertices = new ArrayList<JsonVertex>();
         for (Vertex vertex : graph.getVertices()) {
-            jsonVertexs.add(new JsonVertex(vertex, 1, 1));
+            jsonVertices.add(new JsonVertex(vertex, 1, 1));
         }
         
-        return jsonVertexs;
+        return jsonVertices;
     }
     
     public String allVerticesJson() {
-        List<JsonVertex> jsonVertexs = allVertices();
-        return GSON.INSTANCE.gson().toJson(jsonVertexs);
+        List<JsonVertex> jsonVertices = allVertices();
+        return GSON.INSTANCE.gson().toJson(jsonVertices);
     }
 
 }
