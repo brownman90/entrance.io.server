@@ -86,6 +86,19 @@ public class GraphService {
         return new JsonVertex(vertex, 1, 1);
     }
 
+    public JsonVertex deleteVertex(Object id) throws Exception {
+        Vertex vertex = readVertex(id);
+        graph.removeVertex(vertex);
+        graph.commit();
+
+        return new JsonVertex(vertex, 0, 0);
+    }
+
+    public String deleteVertexJson(Object id) throws Exception {
+        JsonVertex wrapper = deleteVertex(id);
+        return GSON.INSTANCE.gson().toJson(wrapper);
+    }
+
     public String updateVertexJson(Object id, Map<String, String> properties) throws Exception {
         JsonVertex wrapper = updateVertex(id, properties);
         return GSON.INSTANCE.gson().toJson(wrapper);
