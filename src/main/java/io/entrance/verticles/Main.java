@@ -15,6 +15,7 @@ public class Main extends Verticle {
         container.deployModule("io.entrance~mod-entrance-io-auth~1.0.0-SNAPSHOT");
         container.deployVerticle("io.entrance.HttpPingVerticle");
         container.deployVerticle("io.entrance.verticles.BusVerticle");
+        container.deployVerticle("io.entrance.verticles.RestApiVerticle");
     }
 
     
