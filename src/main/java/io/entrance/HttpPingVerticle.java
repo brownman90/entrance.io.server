@@ -34,7 +34,7 @@ public class HttpPingVerticle extends Verticle {
 
         rm.get("/all", new Handler<HttpServerRequest>() {
             public void handle(HttpServerRequest req) {
-                req.response().end(new GraphService().allVerticesJson());
+                req.response().end(new GraphService().readAllVerticesJson());
             }
         });
 
@@ -76,7 +76,7 @@ public class HttpPingVerticle extends Verticle {
             public void handle(Message<JsonObject> msg) {
                 vertx.eventBus().publish("news-feed", "so das kommt jetzt aus dem mongopersistor.");
                 container.logger().info("Handler 1 received: " + msg.toString());
-                msg.reply(new JsonObject().putString("status", "ok").putArray("results", new JsonArray(new GraphService().allVerticesJson())));
+                msg.reply(new JsonObject().putString("status", "ok").putArray("results", new JsonArray(new GraphService().readAllVerticesJson())));
             }
         });
         

@@ -40,8 +40,20 @@ public class RestApiVerticle extends Verticle {
             public void handle(final HttpServerRequest request) {
                 Observable.from(request).subscribe(new Action1<HttpServerRequest>() {
                     @Override
-                    public void call(HttpServerRequest request) {
-                        request.response().end(new GraphService().allVerticesJson());
+                    public void call(final HttpServerRequest request) {
+                        request.response().end(new GraphService().readAllVerticesJson());
+                    }
+                });
+            }
+        });
+        
+        matcher.get("/api/v1/vertex/:id", new Handler<HttpServerRequest>() {
+            @Override
+            public void handle(final HttpServerRequest request) {
+                Observable.from(request).subscribe(new Action1<HttpServerRequest>() {
+                    @Override
+                    public void call(final HttpServerRequest request) {
+                        request.response().end(new GraphService().readVertexWrapperJson(request.params().get("id")));
                     }
                 });
             }
