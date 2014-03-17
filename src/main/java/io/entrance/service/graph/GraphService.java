@@ -22,21 +22,11 @@ public class GraphService {
     public GraphService() {
         graph = GraphDB.INSTANCE.getGraph();
     }
-
-    public JsonVertex createVertex(Map<String, String> properties) {
-        Vertex vertex = graph.addVertex(null);
+    
+    private void setAllProperties(Vertex vertex, Map<String, String> properties) {
         for (Entry<String, String> entry : properties.entrySet()) {
             vertex.setProperty(entry.getKey(), entry.getValue());
         }
-        
-        graph.commit();
-
-        return new JsonVertex(vertex, 1, 1);
-    }
-
-    public String createVertexJson(Map<String, String> properties) {
-        JsonVertex wrapper = createVertex(properties);
-        return GSON.INSTANCE.gson().toJson(wrapper);
     }
     
     public List<JsonVertex> allVertices() {
@@ -47,10 +37,39 @@ public class GraphService {
         
         return jsonVertices;
     }
-    
+ 
     public String allVerticesJson() {
         List<JsonVertex> jsonVertices = allVertices();
         return GSON.INSTANCE.gson().toJson(jsonVertices);
+    }
+
+    public JsonVertex createVertex(Map<String, String> properties) {
+        Vertex vertex = graph.addVertex(null);
+        setAllProperties(vertex, properties);
+        graph.commit();
+
+        return new JsonVertex(vertex, 1, 1);
+    }
+
+    public String createVertexJson(Map<String, String> properties) {
+        JsonVertex wrapper = createVertex(properties);
+        return GSON.INSTANCE.gson().toJson(wrapper);
+    }
+    
+    public JsonVertex updateVertex(Object id, Map<String, String> properties) throws Exception {
+        Vertex vertex = graph.getVertex(id);
+        if (vertex == null) {
+            throw new IllegalArgumentException(String.format("Vertex with id: %s can't be found", id));
+        }      
+        setAllProperties(vertex, properties);
+        graph.commit();
+        
+        return new JsonVertex(vertex, 1, 1);
+    }
+    
+    public String updateVertexJson(Object id, Map<String, String> properties) throws Exception {
+        JsonVertex wrapper = updateVertex(id, properties);
+        return GSON.INSTANCE.gson().toJson(wrapper);
     }
 
 }
