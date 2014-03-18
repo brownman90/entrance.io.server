@@ -14,6 +14,26 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 public class GraphService {
+    
+    /**
+     * Representing all vertices in a form of a list of @see {@link JsonVertex}.
+     * @author jan.prill
+     *
+     */
+    private class Vertices {
+        
+        private List<JsonVertex> jsonVertices = new ArrayList<JsonVertex>();
+        
+        private Vertices() {
+            for (Vertex vertex : graph.getVertices()) {
+                jsonVertices.add(new JsonVertex(vertex, 1, 1));
+            }
+        }
+        
+        private String json() {
+            return GSON.INSTANCE.gson().toJson(jsonVertices);
+        }
+    }
 
     private TitanGraph graph;
 
@@ -51,18 +71,8 @@ public class GraphService {
         return GSON.INSTANCE.gson().toJson(jsonVertex);
     }
 
-    public List<JsonVertex> readAllVertices() {
-        List<JsonVertex> jsonVertices = new ArrayList<JsonVertex>();
-        for (Vertex vertex : graph.getVertices()) {
-            jsonVertices.add(new JsonVertex(vertex, 1, 1));
-        }
-
-        return jsonVertices;
-    }
-
     public String readAllVerticesJson() {
-        List<JsonVertex> jsonVertices = readAllVertices();
-        return GSON.INSTANCE.gson().toJson(jsonVertices);
+        return new Vertices().json();
     }
 
     public JsonVertex createVertex(Map<String, String> properties) {
