@@ -9,27 +9,28 @@ import io.entrance.service.graph.db.GraphDB;
 import io.entrance.service.json.gson.GSON;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 public class GraphService {
-    
+
     /**
      * Representing all vertices in a form of a list of @see {@link JsonVertex}.
+     * 
      * @author jan.prill
-     *
      */
     private class Vertices {
-        
+
         private List<JsonVertex> jsonVertices = new ArrayList<JsonVertex>();
-        
+
         private Vertices() {
             for (Vertex vertex : graph.getVertices()) {
                 jsonVertices.add(new JsonVertex(vertex, 1, 1));
             }
         }
-        
+
         private String json() {
             return GSON.INSTANCE.gson().toJson(jsonVertices);
         }
@@ -45,6 +46,13 @@ public class GraphService {
         for (Entry<String, String> entry : properties.entrySet()) {
             vertex.setProperty(entry.getKey(), entry.getValue());
         }
+    }
+
+    public void testLambda() {
+        String[] words = {
+                "M", "nSkyfall", " Q", "ttAdelet"
+        };
+        Arrays.sort(words, (s1, s2) -> s1.trim().compareTo(s2.trim()));
     }
 
     public Vertex readVertex(Object id) throws Exception {
