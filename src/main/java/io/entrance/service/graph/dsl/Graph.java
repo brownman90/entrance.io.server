@@ -8,47 +8,59 @@ import java.util.Map;
 import io.entrance.service.graph.db.GraphDB;
 
 /**
- * Find or create nodes.
+ * Find, create, update or delete nodes.
  * 
  * @author jan.prill
  *
  */
-public class NodeBuilder {
+public class Graph {
 
+    /**
+     * The current root scope.
+     */
     private Node node;
     
     /**
      * Hidden default constructor.
      */
-    private NodeBuilder() {
+    public Graph() {
         
     }
 
-    private NodeBuilder(Vertex vertex) {
+    public Graph(Vertex vertex) {
         node = new Node(vertex);
     }
 
     // ok. you like to create a graph?
     // let's start with a new node...
-    public static NodeBuilder Node() {
-        return new NodeBuilder();
+    public static Graph Node() {
+        return new Graph();
     }
     
     // ok. you've already got a node?
     // than let's add on to it...
-    public static NodeBuilder Node(Object id) {
+    public static Graph Node(Object id) {
         Vertex vertex = GraphDB.INSTANCE.getGraph().getVertex(id);
-        return new NodeBuilder(vertex);
+        return new Graph(vertex);
     }
     
-    public NodeBuilder update(Map<String, Object> properties) {
+    public Graph update(Map<String, Object> properties) {
         setProperties(properties);
         return this;
     }
     
-    public NodeBuilder create(Map<String, Object> properties) {
+    public Graph create(Map<String, Object> properties) {
         node = new Node(GraphDB.INSTANCE.getGraph().addVertex(null));
         setProperties(properties);
+        return this;
+    }
+    
+    public Graph find() {
+        return this;
+    }
+    
+    public Graph where(String condition) {
+        // TODO: where()-parser
         return this;
     }
 
@@ -58,8 +70,8 @@ public class NodeBuilder {
         }
     }
     
-    public RelationBuilder relate() {
-        RelationBuilder relationBuilder = new RelationBuilder(this);
+    public RelationBuilder rel(String label) {
+        RelationBuilder relationBuilder = new RelationBuilder(this, label);
         return relationBuilder;
     }
 

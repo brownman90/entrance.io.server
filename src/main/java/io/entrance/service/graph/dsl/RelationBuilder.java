@@ -11,16 +11,12 @@ public class RelationBuilder {
     private String label;
     private Map<String, Object> properties;
 
-    // keeping a back reference to the node builder.
-    private NodeBuilder nodeBuilder;
+    // keeping a back reference to the graph.
+    private Graph graph;
 
-    public RelationBuilder(NodeBuilder nodeBuilder) {
-        this.nodeBuilder = nodeBuilder;
-    }
-
-    public RelationBuilder as(String label) {
+    public RelationBuilder(Graph graph, String label) {
+        this.graph = graph;
         this.label = label;
-        return this;
     }
 
     public RelationBuilder with(Map<String, Object> properties) {
@@ -28,14 +24,39 @@ public class RelationBuilder {
         return this;
     }
 
+    public RelationBuilder to(Map<String, Object> properties) {
+        Node node = Graph.Node().create(properties).getNode();
+        return to(node);
+    }
+
     public RelationBuilder to(Node node) {
-        Edge edge = nodeBuilder.getNode().getVertex().addEdge(label, node.getVertex());
+        Edge edge = graph.getNode().getVertex().addEdge(label, node.getVertex());
         for (Map.Entry<String, Object> entry : properties.entrySet()) {
             edge.setProperty(entry.getKey(), entry.getValue());
         }
         relation = new Relation(edge);
 
         return this;
+    }
+
+    /**
+     * Alias for @see {@link RelationBuilder#to(Node)}.
+     * 
+     * @param node
+     * @return
+     */
+    public RelationBuilder on(Node node) {
+        return to(node);
+    }
+
+    /**
+     * Alias for @see {@link RelationBuilder#to(Map)}
+     * 
+     * @param properties
+     * @return
+     */
+    public RelationBuilder on(Map<String, Object> properties) {
+        return to(properties);
     }
 
     public Relation getRelation() {
