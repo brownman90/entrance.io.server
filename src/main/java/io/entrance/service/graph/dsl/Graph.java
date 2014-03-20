@@ -3,6 +3,8 @@ package io.entrance.service.graph.dsl;
 
 import com.tinkerpop.blueprints.Vertex;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import io.entrance.service.graph.db.GraphDB;
@@ -57,6 +59,20 @@ public class Graph {
     
     public Graph find() {
         return this;
+    }
+    
+    /**
+     * find().all() => finds all vertices.
+     * 
+     * @return
+     */
+    public GenericList<Node> all() {
+        GenericList<Node> nodes = new GenericList<Node>();
+        for (Vertex vertex : GraphDB.INSTANCE.getGraph().getVertices()) {
+            nodes.addElement(new Node(vertex));
+        }
+        
+        return nodes;
     }
     
     public Graph where(String condition) {

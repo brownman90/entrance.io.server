@@ -2,6 +2,7 @@
 package io.entrance.verticles;
 
 import io.entrance.service.graph.GraphService;
+import io.entrance.service.graph.dsl.Graph;
 import io.vertx.rxcore.RxSupport;
 import io.vertx.rxcore.java.eventbus.RxMessage;
 
@@ -41,7 +42,8 @@ public class RestApiVerticle extends Verticle {
                 Observable.from(request).subscribe(new Action1<HttpServerRequest>() {
                     @Override
                     public void call(final HttpServerRequest request) {
-                        request.response().end(new GraphService().readAllVerticesJson());
+                        // request.response().end(new GraphService().readAllVerticesJson());
+                        request.response().end(new Graph().find().all().json());
                     }
                 });
             }
