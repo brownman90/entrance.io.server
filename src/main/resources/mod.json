@@ -1,7 +1,7 @@
 {
 
   // Java verticle
-  "main":"io.entrance.verticles.Main",
+  "main":"io.entrance.verticles.MainVerticle",
 
   // In this example we also provide various other versions of the main verticle, you can uncomment this and
   // play around:
@@ -39,4 +39,5 @@
   "homepage": "url to your project page",
 
   "auto-redeploy": true
+  
 }

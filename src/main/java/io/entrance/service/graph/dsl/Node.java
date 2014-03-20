@@ -32,7 +32,7 @@ public class Node {
         // transfer the properties for DTO purposes:
         for (String key : vertex.getPropertyKeys()) {
             Object value = vertex.getProperty(key);
-            properties.put(key, value);
+            properties.put(key, value + " TEST");
         }
     }
 

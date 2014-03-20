@@ -10,7 +10,7 @@ import java.util.Map;
 import io.entrance.service.graph.db.GraphDB;
 
 /**
- * Find, create, update or delete nodes.
+ * Find, create, update or delete nodes. 
  * 
  * @author jan.prill
  *

@@ -48,12 +48,12 @@ public class GraphService {
         }
     }
 
-    public void testLambda() {
-        String[] words = {
-                "M", "nSkyfall", " Q", "ttAdelet"
-        };
-        Arrays.sort(words, (s1, s2) -> s1.trim().compareTo(s2.trim()));
-    }
+//    public void testLambda() {
+//        String[] words = {
+//                "M", "nSkyfall", " Q", "ttAdelet"
+//        };
+//        Arrays.sort(words, (s1, s2) -> s1.trim().compareTo(s2.trim()));
+//    }
 
     public Vertex readVertex(Object id) throws Exception {
         Vertex vertex = graph.getVertex(id);
