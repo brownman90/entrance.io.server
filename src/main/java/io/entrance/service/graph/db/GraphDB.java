@@ -15,8 +15,10 @@ public enum GraphDB {
 
     private static TitanGraph create() {
         BaseConfiguration config = new BaseConfiguration();
-        Configuration storage = config.subset(GraphDatabaseConfiguration.STORAGE_NAMESPACE);
-        storage.setProperty(GraphDatabaseConfiguration.STORAGE_BACKEND_KEY, "cassandra");
+        config.setProperty("storage.directory", "/Users/jan/Documents/var/db/bdb");
+        config.setProperty("storage.backend", "berkeleyje");
+        // Configuration storage = config.subset(GraphDatabaseConfiguration.STORAGE_NAMESPACE);
+        // storage.setProperty(GraphDatabaseConfiguration.STORAGE_BACKEND_KEY, "persistit");
 
         TitanGraph graph = TitanFactory.open(config);
         return graph;
