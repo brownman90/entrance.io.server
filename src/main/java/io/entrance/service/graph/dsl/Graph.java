@@ -69,7 +69,7 @@ public class Graph {
     public GenericList<Node> all() {
         GenericList<Node> nodes = new GenericList<Node>();
         for (Vertex vertex : GraphDB.INSTANCE.getGraph().getVertices()) {
-            nodes.addElement(new Node(vertex));
+            nodes.addElement(new Node(vertex, null, 1));
         }
         
         return nodes;

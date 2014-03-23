@@ -1,10 +1,14 @@
 
 package io.entrance.service.graph.dsl;
 
+import com.tinkerpop.blueprints.Direction;
+import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
 
 import java.beans.Transient;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,6 +22,7 @@ public class Node {
 
     private transient Vertex vertex;
     private Map<String, Object> properties = new HashMap<String, Object>();
+    private List<Relation> out = new ArrayList<Relation>();
 
     /**
      * Hidden default constructor.
@@ -32,7 +37,20 @@ public class Node {
         // transfer the properties for DTO purposes:
         for (String key : vertex.getPropertyKeys()) {
             Object value = vertex.getProperty(key);
-            properties.put(key, value + " TEST");
+            properties.put(key, value);
+        }
+    }
+    
+    public Node(Vertex vertex, Integer inDepth, Integer outDepth) {
+        this(vertex);
+        
+        if (inDepth != null) {
+            // TODO
+        }
+        if (outDepth != null) {
+            for (Edge edge : vertex.getEdges(Direction.OUT)) {
+                out.add(new Relation(edge));
+            }
         }
     }
 
