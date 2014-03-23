@@ -109,14 +109,16 @@
     </dependency>
     <dependency>
        <groupId>com.thinkaurelius.titan</groupId>
-       <artifactId>titan-persistit</artifactId>
+       <artifactId>titan-berkeleyje</artifactId>
        <version>0.4.2</version>
     </dependency>
+    <!--
     <dependency>
        <groupId>com.thinkaurelius.titan</groupId>
        <artifactId>titan-cassandra</artifactId>
        <version>0.4.2</version>
     </dependency>
+    -->
 		<dependency>
 		  <groupId>com.google.code.gson</groupId>
 		  <artifactId>gson</artifactId>
