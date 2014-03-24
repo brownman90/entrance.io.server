@@ -43,6 +43,7 @@ public class RestApiVerticle extends Verticle {
                     @Override
                     public void call(final HttpServerRequest request) {
                         // request.response().end(new GraphService().readAllVerticesJson());
+                        request.response().headers().add("Access-Control-Allow-Origin", "*");
                         request.response().end(new Graph().find().all().json());
                     }
                 });
