@@ -32,6 +32,16 @@ public class RestApiVerticle extends Verticle {
 
     private RouteMatcher setupRoutes() {
         RouteMatcher matcher = new RouteMatcher();
+        
+        matcher.options("/api/v1/vertex", new Handler<HttpServerRequest>() {
+			@Override
+			public void handle(HttpServerRequest request) {
+				request.response().headers().add("Access-Control-Allow-Origin", "*");
+				request.response().headers().add("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
+				request.response().headers().add("Access-Control-Allow-Headers", "Content-Type");
+				request.response().end();
+			}
+		});
 
         /**
          * VERTICES. READ-operation. GET all vertices. They might be limited by
@@ -45,6 +55,7 @@ public class RestApiVerticle extends Verticle {
                     public void call(final HttpServerRequest request) {
                         // request.response().end(new GraphService().readAllVerticesJson());
                         request.response().headers().add("Access-Control-Allow-Origin", "*");
+                        
                         request.response().end(new Graph().find().all().json());
                     }
                 });
@@ -71,6 +82,7 @@ public class RestApiVerticle extends Verticle {
                     @Override
                     public void call(final HttpServerRequest request) {
                     	request.response().headers().add("Access-Control-Allow-Origin", "*");
+                    	request.response().headers().add("Access-Control-Allow-Headers", "Content-Type");
                     	
                     	MultiMap map = request.params();
                     	Map<String, Object> properties = new HashMap<String, Object>();
@@ -86,17 +98,6 @@ public class RestApiVerticle extends Verticle {
         /**
          * VERTICES. CREATE-operation. POST a new vertex to the collection of
          * vertices.
-         */
-        matcher.post("/api/v1/vertex/:id", new Handler<HttpServerRequest>() {
-            @Override
-            public void handle(final HttpServerRequest request) {
-
-            }
-        });
-
-        /**
-         * VERTEX. UPDATE-operation. POST an update to the specified vertex
-         * (:id) and act accordingly on the server.
          */
         matcher.post("/api/v1/vertex/:id", new Handler<HttpServerRequest>() {
             @Override
