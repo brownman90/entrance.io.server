@@ -5,6 +5,8 @@ import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
 
+import io.entrance.service.json.gson.GSON;
+
 import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,6 +59,10 @@ public class Node {
     @Transient
     public Vertex getVertex() {
         return vertex;
+    }
+    
+    public String json() {
+    	return GSON.INSTANCE.gson().toJson(this);
     }
 
 }
