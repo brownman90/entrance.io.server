@@ -42,7 +42,7 @@ public class Graph {
     // ok. you've already got a node?
     // than let's add on to it...
     public static Graph Node(Object id) {
-        Vertex vertex = GraphDB.INSTANCE.getGraph().getVertex(id);
+        Vertex vertex = GraphDB.INSTANCE.graph().getVertex(id);
         return new Graph(vertex);
     }
     
@@ -52,7 +52,7 @@ public class Graph {
     }
     
     public Graph create(Map<String, Object> properties) {
-        node = new Node(GraphDB.INSTANCE.getGraph().addVertex(null));
+        node = new Node(GraphDB.INSTANCE.graph().addVertex(null));
         setProperties(properties);
         return this;
     }
@@ -68,7 +68,7 @@ public class Graph {
      */
     public GenericList<Node> all() {
         GenericList<Node> nodes = new GenericList<Node>();
-        for (Vertex vertex : GraphDB.INSTANCE.getGraph().getVertices()) {
+        for (Vertex vertex : GraphDB.INSTANCE.graph().getVertices()) {
             nodes.addElement(new Node(vertex, null, 1));
         }
         

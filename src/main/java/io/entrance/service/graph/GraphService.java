@@ -39,7 +39,7 @@ public class GraphService {
     private TitanGraph graph;
 
     public GraphService() {
-        graph = GraphDB.INSTANCE.getGraph();
+        graph = GraphDB.INSTANCE.graph();
     }
 
     private void setAllProperties(Vertex vertex, Map<String, String> properties) {

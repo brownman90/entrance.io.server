@@ -97,7 +97,7 @@ public class RelationService {
         // add the comment
         Pair<Relationship, Node> relationshipAndTargetNode = node.add(relProps, targetNodeProps);
         // commit
-        GraphDB.INSTANCE.getGraph().commit();
+        GraphDB.INSTANCE.graph().commit();
 
         return relationshipAndTargetNode;
     }

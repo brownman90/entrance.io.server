@@ -24,7 +24,7 @@ public enum GraphDB {
         return graph;
     }
 
-    public TitanGraph getGraph() {
+    public TitanGraph graph() {
         createGraph();
         return graph; 
     }

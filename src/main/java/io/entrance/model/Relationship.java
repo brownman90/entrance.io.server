@@ -63,7 +63,7 @@ public class Relationship {
        }
        
        String label = properties.remove(LABEL).toString();
-       Edge edge = GraphDB.INSTANCE.getGraph().addEdge(null, outVertex, inVertex, label);
+       Edge edge = GraphDB.INSTANCE.graph().addEdge(null, outVertex, inVertex, label);
        for (Entry<String, Object> entry : properties.entrySet()) {
            edge.setProperty(entry.getKey(), entry.getValue());
        }

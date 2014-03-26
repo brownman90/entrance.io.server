@@ -25,7 +25,7 @@ public class Node {
      * @throws Exception
      */
     public static Node create(Map<String, Object> properties) throws Exception {
-        Vertex vertex = GraphDB.INSTANCE.getGraph().addVertex(null);
+        Vertex vertex = GraphDB.INSTANCE.graph().addVertex(null);
         for (Entry<String, Object> entry : properties.entrySet()) {
             vertex.setProperty(entry.getKey(), entry.getValue());
         }
@@ -39,7 +39,7 @@ public class Node {
     }
     
     public static Node find(Object id) throws Exception {
-        Vertex vertex = GraphDB.INSTANCE.getGraph().getVertex(id);
+        Vertex vertex = GraphDB.INSTANCE.graph().getVertex(id);
         Node node = new Node(vertex);
         return node;
     }
