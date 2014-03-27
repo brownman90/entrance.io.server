@@ -48,13 +48,11 @@ public class BusVerticle extends Verticle {
          }
       });
 
-      eb.registerHandler("io.entrance.deliver-news", new Handler<Message<JsonObject>>() {
-         @Override
-         public void handle(Message<JsonObject> msg) {
-            container.logger().info("io.entrance.news: " + msg.toString());
-            vertx.eventBus().publish("io.entrance.broadcast", msg.body());
-         }
-      });
+      /*
+       * Register a handler to deliver-news. The handler broadcasts
+       * received messages afterwards to all subscribers.
+       */
+      registerHandler(eb, "io.entrance.deliver-news");
 
       // Register Handler 1
       eb.registerHandler("vertx.mongopersistor", new Handler<Message<JsonObject>>() {
@@ -98,6 +96,16 @@ public class BusVerticle extends Verticle {
             }
          }
 
+      });
+   }
+
+   private void registerHandler(EventBus eb, final String listenerAddress) {
+      eb.registerHandler(listenerAddress, new Handler<Message<JsonObject>>() {
+         @Override
+         public void handle(Message<JsonObject> msg) {
+            container.logger().info(listenerAddress + ": " + msg.toString());
+            vertx.eventBus().publish("io.entrance.broadcast", msg.body());
+         }
       });
    }
 
