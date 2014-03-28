@@ -89,7 +89,7 @@ public class BusVerticle extends Verticle {
        *           <p>
        *             Hey Pit. Searching on 'Linked in' isn't what you like to call innovative, right?
        *             Developers are hanging around Github as far as I know. That's where they are geeking
-       *             around develop on ideas together and have fun. That's where we should have a look.
+       *             around, develop on ideas together and have fun. That's where we should have a look.
        *           </p>
        *         </li>
        *       </ul>
