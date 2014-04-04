@@ -1,5 +1,6 @@
 package io.entrance.verticles;
 
+import io.entrance.model.json.JsonDTO;
 import io.entrance.service.graph.GraphService;
 import io.entrance.service.graph.dsl.Graph;
 import io.entrance.service.json.gson.GSON;
@@ -89,10 +90,14 @@ public class RestApiVerticle extends Verticle {
                      @Override
                      public void handle(Buffer buffer) {
                         String json = buffer.toString();
-                        Map<String, Object> properties = GSON.INSTANCE.gson().fromJson(json, new TypeToken<Map<String, Object>>() {
-                           private static final long serialVersionUID = 1L;
-                        }.getType());
-                        String nodeJson = new Graph().create(properties).getNode().json();
+//                        Map<String, Object> properties = GSON.INSTANCE.gson().fromJson(json, new TypeToken<Map<String, Object>>() {
+//                           private static final long serialVersionUID = 1L;
+//                        }.getType());
+//                        String nodeJson = new Graph().create(properties).getNode().json();
+                        JsonDTO dto = GSON.INSTANCE.gson().fromJson(json, JsonDTO.class);
+                        container.logger().info("DTO: " + dto);
+                        String nodeJson = new Graph().create(dto.getInProperties()).getNode().json();
+                        
                         vertx.eventBus().send("io.entrance.deliver-news", new JsonObject(nodeJson));
                         request.response().end(nodeJson);
                      }

@@ -23,6 +23,7 @@ import java.util.Map;
 public class Node {
 
     private transient Vertex vertex;
+    private Object id;
     private Map<String, Object> properties = new HashMap<String, Object>();
     private List<Relation> out = new ArrayList<Relation>();
 
@@ -36,6 +37,7 @@ public class Node {
 
     public Node(Vertex vertex) {
         this.vertex = vertex;
+        this.id = vertex.getId();
         // transfer the properties for DTO purposes:
         for (String key : vertex.getPropertyKeys()) {
             Object value = vertex.getProperty(key);
