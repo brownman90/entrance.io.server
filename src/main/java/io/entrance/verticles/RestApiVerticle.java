@@ -5,8 +5,6 @@ import io.entrance.service.graph.GraphService;
 import io.entrance.service.graph.dsl.Graph;
 import io.entrance.service.json.gson.GSON;
 
-import java.util.Map;
-
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.http.HttpServer;
@@ -17,8 +15,6 @@ import org.vertx.java.platform.Verticle;
 
 import rx.Observable;
 import rx.util.functions.Action1;
-
-import com.google.common.reflect.TypeToken;
 
 public class RestApiVerticle extends Verticle {
 
@@ -90,14 +86,16 @@ public class RestApiVerticle extends Verticle {
                      @Override
                      public void handle(Buffer buffer) {
                         String json = buffer.toString();
-//                        Map<String, Object> properties = GSON.INSTANCE.gson().fromJson(json, new TypeToken<Map<String, Object>>() {
-//                           private static final long serialVersionUID = 1L;
-//                        }.getType());
-//                        String nodeJson = new Graph().create(properties).getNode().json();
                         JsonDTO dto = GSON.INSTANCE.gson().fromJson(json, JsonDTO.class);
                         container.logger().info("DTO: " + dto);
-                        String nodeJson = new Graph().create(dto.getInProperties()).getNode().json();
-                        
+
+                        String nodeJson;
+                        if ("comment".equals(dto.getType())) {
+                           nodeJson = Graph.Node().create(dto.getInProperties()).rel("comment").on(Graph.Node().find().by(dto.getOut()).getNode()).getRelation().json();
+                        } else {
+                           nodeJson = new Graph().create(dto.getInProperties()).getNode().json();
+                        }
+
                         vertx.eventBus().send("io.entrance.deliver-news", new JsonObject(nodeJson));
                         request.response().end(nodeJson);
                      }

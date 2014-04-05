@@ -30,7 +30,7 @@ public class Graph {
     }
 
     public Graph(Vertex vertex) {
-        node = new Node(vertex);
+        node = new Node(vertex, 1, 1);
     }
 
     // ok. you like to create a graph?
@@ -54,6 +54,8 @@ public class Graph {
     public Graph create(Map<String, Object> properties) {
         node = new Node(GraphDB.INSTANCE.graph().addVertex(null));
         setProperties(properties);
+        GraphDB.INSTANCE.graph().commit();
+   
         return this;
     }
     
@@ -69,7 +71,7 @@ public class Graph {
     public GenericList<Node> all() {
         GenericList<Node> nodes = new GenericList<Node>();
         for (Vertex vertex : GraphDB.INSTANCE.graph().getVertices()) {
-            nodes.addElement(new Node(vertex, null, 1));
+            nodes.addElement(new Node(vertex, 1, 1));
         }
         
         return nodes;
@@ -78,6 +80,12 @@ public class Graph {
     public Graph where(String condition) {
         // TODO: where()-parser
         return this;
+    }
+    
+    public Graph by(Object id) {
+       Vertex vertex = GraphDB.INSTANCE.graph().getVertex(id);
+       node = new Node(vertex, 1, 1);
+       return this;
     }
 
     private void setProperties(Map<String, Object> properties) {
