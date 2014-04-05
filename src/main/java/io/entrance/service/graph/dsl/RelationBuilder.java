@@ -37,7 +37,7 @@ public class RelationBuilder {
             edge.setProperty(entry.getKey(), entry.getValue());
          }
       }
-      relation = new Relation(edge);
+      relation = new Relation(edge, node.getVertex().getId());
 
       GraphDB.INSTANCE.graph().commit();
       return this;

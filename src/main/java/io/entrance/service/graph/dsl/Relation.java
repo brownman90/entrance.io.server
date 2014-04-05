@@ -12,15 +12,15 @@ public class Relation {
 
    private transient Edge edge;
    private Map<String, Object> properties = new HashMap<String, Object>();
-   private Node parentNode;
-   private Node childNode;
+   private Object parentNode;
+   private Object childNode;
 
    @SuppressWarnings("unused")
    private Relation() {
 
    }
 
-   public Relation(Edge edge) {
+   public Relation(Edge edge, Object id) {
       this.edge = edge;
       properties.put("label", edge.getLabel());
       for (String key : edge.getPropertyKeys()) {
@@ -28,8 +28,19 @@ public class Relation {
          properties.put(key, value);
       }
 
-      parentNode = new Node(edge.getVertex(Direction.IN));
-      childNode = new Node(edge.getVertex(Direction.OUT));
+      
+      Node parent = new Node(edge.getVertex(Direction.IN));
+      if (parent.getVertex().getId().equals(id)) {
+         parentNode = parent.getVertex().getId();
+      } else {
+         parentNode = parent;
+      }
+      Node child = new Node(edge.getVertex(Direction.OUT));
+      if (child.getVertex().getId().equals(id)) {
+         childNode = child.getVertex().getId();
+      } else {
+         childNode = child;
+      }
    }
 
    public Edge getEdge() {

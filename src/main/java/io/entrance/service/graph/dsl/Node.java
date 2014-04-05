@@ -49,12 +49,12 @@ public class Node {
 
       if (parentDepth > 0) {
          for (Edge edge : vertex.getEdges(Direction.OUT)) {
-            parentRelations.add(new Relation(edge));
+            parentRelations.add(new Relation(edge, vertex.getId()));
          }
       }
       if (childDepth > 0) {
          for (Edge edge : vertex.getEdges(Direction.IN)) {
-            childRelations.add(new Relation(edge));
+            childRelations.add(new Relation(edge, vertex.getId()));
          }
       }
    }
